@@ -1,27 +1,39 @@
-import pandas
-from sklearn import linear_model
 import joblib
+import pandas
 from cryptography.fernet import Fernet
+from sklearn import linear_model
 
-df = pandas.read_csv("data/cars.csv")
 
-X = df[['Weight', 'Volume']]
-y = df['CO2']
+def train_model(data):
+    X = data[["Weight", "Volume"]]
+    y = data["CO2"]
+    model = linear_model.LinearRegression()
+    model.fit(X, y)
+    return model
 
-regr = linear_model.LinearRegression()
-regr.fit(X, y)
 
-joblib.dump(regr, "model.pkl", compress=9)
+def generate_key():
+    key = Fernet.generate_key()
+    with open("key.key", "wb") as filekey:
+        filekey.write(key)
+    return key
 
-key = Fernet.generate_key()
-fernet = Fernet(key)
-with open('key.key', 'wb') as filekey:
-   filekey.write(key)
 
-with open('model.pkl', 'rb') as file:
-    original = file.read()
+def encrypt_model(model):
+    joblib.dump(model, "model.pkl", compress=9)
+    key = generate_key()
+    fernet = Fernet(key)
+    with open("model.pkl", "rb") as model_file:
+        original = model_file.read()
+    encrypted = fernet.encrypt(original)
+    with open("model_encrypted", "wb") as encrypted_file:
+        encrypted_file.write(encrypted)
 
-encrypted = fernet.encrypt(original)
 
-with open('model_encrypted', 'wb') as encrypted_file:
-    encrypted_file.write(encrypted)
+def main():
+    data = pandas.read_csv("data/cars.csv")
+    model = train_model(data)
+    encrypt_model(model)
+
+
+main()

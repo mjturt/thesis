@@ -51,7 +51,7 @@ endif
 
 .PHONY: clean
 clean:
-	$(RM) *.manifest *.manifest.sgx *.token *.sig OUTPUT* *.PID TEST_STDOUT TEST_STDERR
+	$(RM) *.manifest *.manifest.sgx *.token *.sig OUTPUT* *.PID TEST_STDOUT TEST_STDERR ca.crt model_encrypted
 	$(RM) -r scripts/__pycache__
 
 .PHONY: distclean
