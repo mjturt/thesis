@@ -1,0 +1,7 @@
+/key-server/server_epid
+/key-server/ssl/ca.*
+/key-server/ssl/server.*
+
+/app/ca.crt
+
+settings.sh
