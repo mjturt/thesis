@@ -1,23 +1,23 @@
 # Key server
 
-Requirements:
+## Requirements
 
 - Gramine
 - make, gcc, etc.
 
-Load settings:
+## Load settings
 
 ```sh
 source ../settings.sh
 ```
 
-Build:
+## Build
 
 ```sh
 make app epid
 ```
 
-Run:
+## Run
 
 ```sh
 ./server_epid

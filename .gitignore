@@ -14,5 +14,5 @@ model-trainer/model.pkl
 model-trainer/model_encrypted
 
 settings.sh
-
 .venv
+
