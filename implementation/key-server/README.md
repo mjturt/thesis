@@ -1,9 +1,12 @@
 # Key server
 
+Intel EPID Remote Attestation capable key server. After successful remote attestation,
+the key is returned.
+
 ## Requirements
 
 - Gramine
-- make, gcc, etc.
+- make, gcc
 
 ## Load settings
 
