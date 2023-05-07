@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "Citation."
+authors:
+  - family-names: Turtiainen
+    given-names: Maks
+title: "Trusted Execution Environments in protecting ML models"
+version: 1.0.0
+date-released: 2023-06-06
