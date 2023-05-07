@@ -240,9 +240,20 @@ def print_results(data: dict, car: Car | None):
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--dataset", action="store_true")
-    parser.add_argument("-n", "--nosgx", action="store_true")
+    parser = argparse.ArgumentParser(
+        prog="app.py",
+        description=str(
+            "Predicts the consumption of a car based on its data. The calculations are done"
+            " in an Intel SGX enclave. Can either use manually entered data or a dataset."
+            " Can also be run without Intel SGX."
+        ),
+    )
+    parser.add_argument(
+        "-d", "--dataset", action="store_true", help=f"Use dataset ({TEST_DATASET})"
+    )
+    parser.add_argument(
+        "-n", "--nosgx", action="store_true", help="Do not use Intel SGX"
+    )
     return parser.parse_args()
 
 
