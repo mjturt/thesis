@@ -26,7 +26,9 @@ def main():
     key = os.environ.get("SECRET_PROVISION_SECRET_STRING", "")
     model_file = decrypt_model(key)
     model = joblib.load(model_file)
-    predictedCO2 = model.predict([[2300, 1300]])
+    predictedCO2 = model.predict([[6, 2500, 240, 2000, 16.5, 88, 1]])
     print(f"PREDICTION: {predictedCO2}")
+    return predictedCO2[0]
+
 
 main()

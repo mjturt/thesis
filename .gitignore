@@ -1,18 +1,17 @@
-key-server/server_epid
-key-server/ssl/ca.*
-key-server/ssl/server.*
+implementation/key-server/server_epid
+implementation/key-server/ssl/ca.*
+implementation/key-server/ssl/server.*
 
-app/ca.crt
-app/python.manifest
-app/python.manifest.sgx
-app/python.sig
-app/python.token
-app/model_encrypted
+implementation/app/trusted/ca.crt
+implementation/app/trusted/python.manifest
+implementation/app/trusted/python.manifest.sgx
+implementation/app/trusted/python.sig
+implementation/app/trusted/python.token
+implementation/app/trusted/model_encrypted
 
-model-trainer/key.key
-model-trainer/model.pkl
-model-trainer/model_encrypted
+implementation/model-trainer/key.key
+implementation/model-trainer/model.pkl
+implementation/model-trainer/model_encrypted
 
-settings.sh
-.venv
-
+implementation/settings.sh
+implementation/.venv
