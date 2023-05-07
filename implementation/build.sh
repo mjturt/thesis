@@ -30,8 +30,5 @@ echo
 echo "source settings.sh"
 echo "cd app/trusted"
 echo "make SGX=1"
-echo
-echo "gramine-sgx python app.py"
-echo "or"
 echo "cd .."
 echo "python app.py"

@@ -55,8 +55,9 @@ sgx.trusted_files = [
 {% for path in python.get_sys_path(entrypoint) %}
   "file:{{ path }}{{ '/' if path.is_dir() else '' }}",
 {% endfor %}
-  "file:app.py",
+  "file:trusted.py",
   "file:helper-files/",
   "file:ca.crt",
   "file:model_encrypted",
+  "file:cars2.csv",
 ]
