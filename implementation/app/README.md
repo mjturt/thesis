@@ -44,3 +44,15 @@ The Gramine application can also be run directly from the `trusted/` directory:
 ```sh
 gramine-sgx python trusted.py
 ```
+
+## Testing
+
+`app.py` can be run with `--nosgx` parameter to disable Intel SGX:
+
+```sh
+python app.py --nosgx
+```
+
+When using `--nosgx` argument, the files `model_encrypted` and `cars2.csv` must be
+in the root of filesystem (`/model_encrypted` and `/cars2.csv`) as the isolated environment
+expects them there.

@@ -1,54 +1,52 @@
 import argparse
 import json
+import os
 from subprocess import PIPE, Popen
-from time import time
 
-import joblib
-import pandas
-from sklearn.metrics import r2_score
+TEST_DATASET_NAME = "cars2.csv"
 
-TEST_DATASET = "trusted/cars2.csv"
-TEST_MODEL = "../model-trainer/model.pkl"
+# Used for test without Intel SGX
+TEST_KEY = "../model-trainer/key.key"
 
 
 def mpg_to_l_per_100_km(mpg: float) -> float:
-    return 235.215 / mpg
+    return round(235.215 / mpg, 1)
 
 
 def cubic_inches_to_cm3(cubic_inches: float) -> float:
-    return cubic_inches * 16.387
+    return round(cubic_inches * 16.387, 1)
 
 
 def hp_to_kw(hp: float) -> float:
-    return hp * 0.7457
+    return round(hp * 0.7457, 1)
 
 
-def pounds_to_kg(pounds: float) -> float:
-    return pounds * 0.453592
+def pounds_to_kg(pounds: int) -> int:
+    return round(pounds * 0.453592)
 
 
 def fts2_to_ms2(fs: float) -> float:
-    return fs * 0.3048
+    return round(fs * 0.3048, 1)
 
 
 def l_per_100_km_to_mpg(lper100km: float) -> float:
-    return 235.215 * lper100km
+    return round(235.215 * lper100km, 1)
 
 
 def cm3_to_cubic_inches(cm3: float) -> float:
-    return cm3 / 16.387
+    return round(cm3 / 16.387, 1)
 
 
 def kw_to_hp(kw: float) -> float:
-    return kw / 0.7457
+    return round(kw / 0.7457, 1)
 
 
-def kg_to_pounds(kg: float) -> float:
-    return kg / 0.453592
+def kg_to_pounds(kg: int) -> int:
+    return round(kg / 0.453592)
 
 
 def ms2_to_fts2(ms2: float) -> float:
-    return ms2 / 0.3048
+    return round(ms2 / 0.3048, 1)
 
 
 class Car:
@@ -96,7 +94,7 @@ class Car:
         return hp_to_kw(self.horsepower)
 
     @property
-    def si_weight(self) -> float:
+    def si_weight(self) -> int:
         return pounds_to_kg(self.weight)
 
     @property
@@ -131,18 +129,16 @@ class Car:
             string = f"{string}\n{self.get_consumption_str}"
         return string
 
-    def as_test_data(self) -> list[list]:
-        return [
-            [
-                self.cylinders,
-                self.displacement,
-                self.horsepower,
-                self.weight,
-                self.acceleration,
-                self.year,
-                self.origin,
-            ]
-        ]
+    def as_ml_data(self) -> dict:
+        return {
+            "cylinders": [self.cylinders],
+            "displacement": [self.displacement],
+            "horsepower": [self.horsepower],
+            "weight": [self.weight],
+            "acceleration": [self.acceleration],
+            "year": [self.year],
+            "origin": [self.origin],
+        }
 
 
 def manual_car_build() -> Car:
@@ -160,76 +156,34 @@ def manual_car_build() -> Car:
         int(cylinders),
         cm3_to_cubic_inches(float(displacement)),
         kw_to_hp(float(power)),
-        kg_to_pounds(float(weight)),
+        kg_to_pounds(int(weight)),
         ms2_to_fts2(float(acceleration)),
-        float(year),
+        int(year),
         int(origin),
     )
 
 
-def run_gramine(arg: str) -> bytes:
-    pipe = Popen(
-        ["gramine-sgx", "python", "trusted.py", arg], cwd="trusted", stdout=PIPE
-    )
+def run_trusted(arg: str, sgx=True) -> bytes:
+    cmds = ["python", "trusted.py", arg]
+    env_mod = os.environ.copy()
+    if sgx:
+        cmds.insert(0, "gramine-sgx")
+    else:
+        with open(TEST_KEY, "r") as key_file:
+            key_str = key_file.read().strip()
+            env_mod["SECRET_PROVISION_SECRET_STRING"] = key_str
+    pipe = Popen(cmds, cwd="trusted", stdout=PIPE, env=env_mod)
     pipe.wait()
     text = pipe.communicate()[0]
     data = text.splitlines()[-1]
     return data
 
 
-def build_data(data) -> tuple:
-    X = data[
-        [
-            "cylinders",
-            "displacement",
-            "horsepower",
-            "weight",
-            "acceleration",
-            "year",
-            "origin",
-        ]
-    ]
-    y = data["mpg"]
-    return X, y
-
-
-def predict(model, data: list) -> tuple:
-    count = len(data)
-    start = time()
-    result = model.predict(data)[0]
-    end = time()
-    return result, end - start, count, None
-
-
-def predict_with_dataset(model, test_dataset: str) -> tuple:
-    data = pandas.read_csv(test_dataset)
-    test_X, test_y = build_data(data)
-    count = len(test_X)
-    start = time()
-    result = model.predict(test_X)
-    end = time()
-    r2 = r2_score(test_y, result)
-    return list(result), end - start, count, r2
-
-
-def compose_result(result: tuple) -> str:
-    predictions, elapsed_time, count, r2 = result
-    if predictions is not list:
-        predictions = [predictions]
-    as_dict = {
-        "predictions": predictions,
-        "time": elapsed_time,
-        "count": count,
-        "r2": r2,
-    }
-    return json.dumps(as_dict)
-
-
 def print_results(data: dict, car: Car | None):
     if car:
         print("For a car:\n")
         print(f"{car}\n")
-        print(f"The predicted consumption is {car.l_per_100km:.1f} km/100l")
+        print(f"The predicted consumption is {car.l_per_100km:.1f} l/100km")
         print(f"The prediction calculation took {data['time']:.6f} seconds")
     else:
         print(
@@ -249,7 +203,10 @@ def parse_arguments():
         ),
     )
     parser.add_argument(
-        "-d", "--dataset", action="store_true", help=f"Use dataset ({TEST_DATASET})"
+        "-d",
+        "--dataset",
+        action="store_true",
+        help=f"Use dataset ({TEST_DATASET_NAME})",
     )
     parser.add_argument(
         "-n", "--nosgx", action="store_true", help="Do not use Intel SGX"
@@ -266,39 +223,34 @@ def main():
         if no_sgx:
             print(
                 "Note: Not using Intel SGX. Calculating data for dataset"
-                f" {TEST_DATASET} locally.\n"
+                f" {TEST_DATASET_NAME} locally.\n"
             )
-            model = joblib.load(TEST_MODEL)
-            data_as_tuple = predict_with_dataset(model, TEST_DATASET)
-            raw_data = compose_result(data_as_tuple)
+            raw_data = run_trusted("--use-dataset", sgx=False)
         else:
             print(
-                f"Sending dataset {TEST_DATASET} to the Gramine Intel SGX enclave"
+                f"Sending dataset {TEST_DATASET_NAME} to the Gramine Intel SGX enclave"
                 " for calculation...\n"
             )
             print("--- START OF GRAMINE OUTPUT ---\n")
-            raw_data = run_gramine("--use-dataset")
+            raw_data = run_trusted("--use-dataset")
             print("\n--- END OF GRAMINE OUTPUT ---\n")
         data = json.loads(raw_data)
     else:
         car = manual_car_build()
-        print(f"\n{car}\n")
-        input_data = json.dumps(car.as_test_data())
+        input_data = json.dumps(car.as_ml_data())
         data = json.loads(input_data)
         if no_sgx:
             print(
-                "Note: Not using Intel SGX. Calculating data for above car locally.\n"
+                "\nNote: Not using Intel SGX. Calculating data for above car locally.\n"
             )
-            model = joblib.load(TEST_MODEL)
-            data_as_tuple = predict(model, car.as_test_data())
-            raw_data = compose_result(data_as_tuple)
+            raw_data = run_trusted(input_data, sgx=False)
         else:
             print(
                 "Sending the above car data to the Gramine Intel SGX enclave for"
                 " calculation...\n"
             )
             print("--- START OF GRAMINE OUTPUT ---\n")
-            raw_data = run_gramine(input_data)
+            raw_data = run_trusted(input_data)
             print("\n--- END OF GRAMINE OUTPUT ---\n")
         data = json.loads(raw_data)
         car.mpg = data["predictions"][0]

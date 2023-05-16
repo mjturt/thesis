@@ -11,6 +11,7 @@ import pandas
 from cryptography.fernet import Fernet
 from sklearn.metrics import r2_score
 
+STRICT = False
 TEST_DATASET = "/cars2.csv"
 
 
@@ -32,9 +33,10 @@ def build_data(data) -> tuple:
 
 def predict(model, raw_data: str) -> tuple:
     data = json.loads(raw_data)
+    test_X = pandas.DataFrame(data)
     count = len(data)
     start = time()
-    result = model.predict(data)
+    result = model.predict(test_X)
     end = time()
     return list(result), end - start, count, None
 
@@ -73,9 +75,10 @@ def compose_result(result: tuple) -> str:
 
 
 def main():
-    if not os.path.exists("/dev/attestation/quote"):
-        print("Are you running under SGX, with remote attestation enabled?")
-        sys.exit(1)
+    if STRICT:
+        if not os.path.exists("/dev/attestation/quote"):
+            print("Are you running under SGX, with remote attestation enabled?")
+            sys.exit(1)
     key = os.environ.get("SECRET_PROVISION_SECRET_STRING", "")
     model_file = decrypt_model(key)
     model = joblib.load(model_file)
