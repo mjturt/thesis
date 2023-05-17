@@ -19,3 +19,7 @@ Dataset origin: <https://archive.ics.uci.edu/ml/datasets/auto+mpg>
 ```sh
 python model-trainer.py
 ```
+
+## Dummy data
+
+Dummy data CSV (`../generated_data.csv`) can be generated with `python data_generator.py <row count>`.
