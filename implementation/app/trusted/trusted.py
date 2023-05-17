@@ -12,7 +12,7 @@ from cryptography.fernet import Fernet
 from sklearn.metrics import r2_score
 
 STRICT = False
-TEST_DATASET = "/cars2.csv"
+TEST_DATASET = "/cars.csv"
 
 
 def build_data(data) -> tuple:

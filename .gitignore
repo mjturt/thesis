@@ -8,6 +8,7 @@ implementation/app/trusted/python.manifest.sgx
 implementation/app/trusted/python.sig
 implementation/app/trusted/python.token
 implementation/app/trusted/model_encrypted
+implementation/app/trusted/cars.csv
 
 implementation/model-trainer/key.key
 implementation/model-trainer/model.pkl
@@ -15,3 +16,4 @@ implementation/model-trainer/model_encrypted
 
 implementation/settings.sh
 implementation/.venv
+implementation/generated_cars.csv

@@ -9,6 +9,8 @@ python model-trainer.py
 echo "Copy encrypted model to app"
 cd .. || exit 1
 cp -v model-trainer/model_encrypted app/trusted/model_encrypted
+echo "Copy test dataset to app"
+cp -v model-trainer/data/cars2.csv app/trusted/cars.csv
 
 echo "Build key server"
 cd key-server || exit 1

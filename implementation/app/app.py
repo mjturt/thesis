@@ -3,7 +3,7 @@ import json
 import os
 from subprocess import PIPE, Popen
 
-TEST_DATASET_NAME = "cars2.csv"
+TEST_DATASET_NAME = "cars.csv"
 
 # Used for test without Intel SGX
 TEST_KEY = "../model-trainer/key.key"
