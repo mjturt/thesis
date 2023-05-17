@@ -173,7 +173,6 @@ def run_trusted(arg: str, sgx=True) -> dict:
             key_str = key_file.read()
             env_mod["SECRET_PROVISION_SECRET_STRING"] = key_str
     pipe = Popen(cmds, cwd="trusted", stdout=PIPE, env=env_mod)
-    pipe.wait()
     text = pipe.communicate()[0]
     try:
         data = text.splitlines()[-1]
