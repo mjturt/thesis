@@ -11,12 +11,14 @@
 #define SRV_CRT_PATH "./ssl/server.crt"
 #define SRV_KEY_PATH "./ssl/server.key"
 
-int main(void) {
-    FILE* ptr;
+int main(void)
+{
+    FILE *ptr;
     char str[50];
-    ptr = fopen("../model-trainer/key.key","a+");
+    ptr = fopen("../model-trainer/key.key", "a+");
 
-    if (NULL == ptr) {
+    if (NULL == ptr)
+    {
         printf("file can't be opened \n");
     }
 
@@ -26,7 +28,8 @@ int main(void) {
                                             PORT, SRV_CRT_PATH, SRV_KEY_PATH,
                                             NULL, NULL);
     fclose(ptr);
-    if (ret < 0) {
+    if (ret < 0)
+    {
         fprintf(stderr, "[error] secret_provision_start_server() returned %d\n", ret);
         return 1;
     }

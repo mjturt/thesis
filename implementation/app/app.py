@@ -163,20 +163,27 @@ def manual_car_build() -> Car:
     )
 
 
-def run_trusted(arg: str, sgx=True) -> bytes:
+def run_trusted(arg: str, sgx=True) -> dict:
     cmds = ["python", "trusted.py", arg]
     env_mod = os.environ.copy()
     if sgx:
         cmds.insert(0, "gramine-sgx")
     else:
         with open(TEST_KEY, "r") as key_file:
-            key_str = key_file.read().strip()
+            key_str = key_file.read()
             env_mod["SECRET_PROVISION_SECRET_STRING"] = key_str
     pipe = Popen(cmds, cwd="trusted", stdout=PIPE, env=env_mod)
     pipe.wait()
     text = pipe.communicate()[0]
-    data = text.splitlines()[-1]
-    return data
+    try:
+        data = text.splitlines()[-1]
+        data_json = json.loads(data)
+    except Exception as exc:
+        print(f"\nError: Invalid output from SGX enclave ({exc})")
+        if text:
+            print(f"Raw outout: {text.decode()}")
+        exit(1)
+    return data_json
 
 
 def print_results(data: dict, car: Car | None):
@@ -224,17 +231,17 @@ def main():
             print(
                 "Note: Not using Intel SGX. Calculating data for dataset"
                 f" {TEST_DATASET_NAME} locally.\n"
+                f"Using key {TEST_KEY} for decryption.\n"
             )
-            raw_data = run_trusted("--use-dataset", sgx=False)
+            data = run_trusted("--use-dataset", sgx=False)
         else:
             print(
                 f"Sending dataset {TEST_DATASET_NAME} to the Gramine Intel SGX enclave"
                 " for calculation...\n"
             )
             print("--- START OF GRAMINE OUTPUT ---\n")
-            raw_data = run_trusted("--use-dataset")
+            data = run_trusted("--use-dataset")
             print("\n--- END OF GRAMINE OUTPUT ---\n")
-        data = json.loads(raw_data)
     else:
         car = manual_car_build()
         input_data = json.dumps(car.as_ml_data())
@@ -242,17 +249,17 @@ def main():
         if no_sgx:
             print(
                 "\nNote: Not using Intel SGX. Calculating data for above car locally.\n"
+                f"Using key {TEST_KEY} for decryption.\n"
             )
-            raw_data = run_trusted(input_data, sgx=False)
+            data = run_trusted(input_data, sgx=False)
         else:
             print(
-                "Sending the above car data to the Gramine Intel SGX enclave for"
+                "\nSending the above car data to the Gramine Intel SGX enclave for"
                 " calculation...\n"
             )
             print("--- START OF GRAMINE OUTPUT ---\n")
-            raw_data = run_trusted(input_data)
+            data = run_trusted(input_data)
             print("\n--- END OF GRAMINE OUTPUT ---\n")
-        data = json.loads(raw_data)
         car.mpg = data["predictions"][0]
     print_results(data, car)
 

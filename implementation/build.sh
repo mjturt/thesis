@@ -19,7 +19,7 @@ echo "Copy key server certificate to app"
 cd .. || exit 1
 cp -v key-server/ssl/ca.crt app/trusted/ca.crt
 
-echo "Next:"
+echo "--- NEXT STEPS ---"
 echo
 echo "source settings.sh"
 echo "cd key-server"
