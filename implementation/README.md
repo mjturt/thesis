@@ -4,8 +4,9 @@ This is a reference implementation on how to use Trusted Execution Environments
 to protect Intellectual Property of ML models. Intel SGX is used as Trusted
 Exectuion Environment.
 
-Implementation consist of three parts: the main application (app), key-server
-and model-trainer.
+Implementation consist of three parts: predictor, key-server
+and model-trainer. Predictor is meant to be run in the untrusted
+environment.
 
 Details can be read from the [thesis's](../thesis) Solution section.
 

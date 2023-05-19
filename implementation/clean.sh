@@ -8,5 +8,5 @@ cd key-server || exit 1
 make clean
 
 cd ..
-cd app/trusted || exit 1
+cd predictor/trusted || exit 1
 make clean
