@@ -34,7 +34,7 @@ def build_data(data) -> tuple:
 def predict(model, raw_data: str) -> tuple:
     data = json.loads(raw_data)
     test_X = pandas.DataFrame(data)
-    count = len(data)
+    count = len(test_X)
     start = time()
     result = model.predict(test_X)
     end = time()
