@@ -3,7 +3,7 @@ message: "Citation."
 authors:
   - family-names: Turtiainen
     given-names: Maks
-title: "Trusted Execution Environments in protecting machine learning models"
+title: "Trusted Execution Environments in Protecting Machine Learning Models"
 version: 1.0.0
 date-released: 2023-06-06
 url: "https://github.com/mjturt/thesis"
