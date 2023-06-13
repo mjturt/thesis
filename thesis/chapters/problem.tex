@@ -1,0 +1,31 @@
+\chapter{The Problem} \label{problem}
+
+As the training of the machine learning model is time-consuming and requires plenty of export effort, it is usually expensive. Due to the expensive nature of ML model training, it is often desired to protect the Intellectual Property of the ML model. Whether the intellectual property of the ML model is safe arises in multiple different scenarios, the most obvious being that when a software solution containing the ML model is distributed to the end-user.
+
+Next, the two most typical scenarios where the IP of the ML model can become compromised are discussed.
+
+\section{Problem When Distributing Software} \label{problem-dist}
+
+In some cases, software solutions that contain machine learning computations are separated into the client part and the server part. By separating software solutions into client and server, only the client part needs to be distributed to the end-user and the software distributor can provide access to the server part of the software which contains the machine learning models. The server part is then run inside the software distributor's own trusted infrastructure, and the intellectual property of the ML model can be considered safe. However, Canadian research from last year suggests that the ML model can still be stolen through API extraction\cite{difficulty}.
+
+But in other cases, the machine learning application needs to be distributed in its entirety to the end-users, including machine learning models. This is the case, especially when the machine learning application cannot rely on a stable internet connection to query the machine learning application server, for example in self-driving solutions in cars and marine vessels. Protecting intellectual property of the ML model in this scenario is in the main focus of this thesis.
+
+Without any protection, this practice exposes ML models to potential threats that can compromise the intellectual property of these models. 
+
+ML models embedded within applications can be reverse engineered by attackers, allowing them to extract the underlying algorithms, model architecture, or even training data. This process enables potential competitors or malicious actors to replicate or modify the model without permission, posing a significant threat to the original model's intellectual property.
+
+\section{Problem When Using Cloud Environments} \label{problem-cloud}
+
+As cloud computing services are very popular, they should be briefly discussed, even though the focus of this thesis is on the case when ML application is distributed entirely to the end-users. Cloud computing services raise concern whether the third-party cloud infrastructure providers can be completely trusted. This question has been investigated in many contexts, as the most popular cloud infrastructure provider companies are from the United States. Many European Union countries have policies not to use third-party cloud infrastructure when public sector application can process sensitive information.
+
+\section{Limitations of Existing Approaches} \label{limit}
+
+There are techniques designed to protect the IP any data like data obfuscation, but none of them provides complete solution to the problem.
+
+\subsubsection{Data Obfuscation} \label{obfuscation}
+
+Commonly employed techniques, such as obfuscation, aim to hinder reverse engineering by transforming the ML model's code or structure. However, these methods often fall short, as skilled attackers can still reverse engineer the transformed models, posing a significant risk to the intellectual property of the ML model.\cite{obfuscation}
+
+\subsubsection{Legal Protection} \label{legal}
+
+While legal frameworks exist to protect intellectual property, enforcing them in the context of ML models can be challenging. Copyright and patent laws may not adequately address the unique challenges presented by the machine learning models. Furthermore, legislations are different in different countries and there are parties that do not care about legal sanctions.

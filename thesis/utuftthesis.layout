@@ -1,0 +1,140 @@
+#% Do not delete the line below; configure depends on this
+#  \DeclareLaTeXClass{UTU FT Thesis}
+#  \DeclareCategory{Articles}
+# UTU FT thesis document class, based on report
+# Author : Jari-Matti Mäkelä <jmjm@iki.fi>
+
+Format 60
+Input stdclass.inc
+
+SecNumDepth            3
+TocDepth               3
+
+Provides fontenc       1
+Provides url           1
+Provides geometry      1
+Provides babel         1
+Provides amsmath       1
+Provides amssymb       1
+Provides fontspec      1
+Provides graphicx      1
+Provides biblatex      1
+Provides verbatim      1
+Provides nomencl       1
+
+Style Appendix
+    CopyStyle     Chapter
+    LatexName     appchapter
+    LabelString   "Appendix" # For the menu?
+End
+
+Style PubYear
+    Margin                Dynamic
+    LatexType             Command
+    LatexName             pubyear
+    LabelType   Static
+    LabelString           "Publication year:"
+    Align                 Center
+    Font
+      Size                Large
+    EndFont
+End
+
+Style PubMonth
+    Margin                Dynamic
+    LatexType             Command
+    LatexName             pubmonth
+    LabelType   Static
+    LabelString           "Publication month: "
+    Align                 Center
+    Font
+      Size                Large
+    EndFont
+End
+
+Style PubLab
+    Margin                Dynamic
+    LatexType             Command
+    LatexName             publab
+    LabelType   Static
+    LabelString           "Laboratory name: "
+    Align                 Center
+    Font
+      Size                Large
+    EndFont
+End
+
+Style PubLabEN
+    Margin                Dynamic
+    LatexType             Command
+    LatexName             publaben
+    LabelType   Static
+    LabelString           "Laboratory name (for 2nd abstract): "
+    Align                 Center
+    Font
+      Size                Large
+    EndFont
+End
+
+Style PubType
+    Margin                Dynamic
+    LatexType             Command
+    LatexName             pubtype
+    LabelType   Static
+    LabelString           "Publication type (tkk/luk/gradu/di): "
+    Align                 Center
+    Font
+      Size                Large
+    EndFont
+End
+
+Style Keywords
+    Margin                Dynamic
+    LatexType             Command
+    LatexName             keywords
+    LabelType   Static
+    LabelString           "Keywords: "
+    Align                 Center
+    Font
+      Size                Large
+    EndFont
+End
+
+
+Style KeywordsEnglish
+    Margin                Dynamic
+    LatexType             Command
+    LatexName             keywordsen
+    LabelType   Static
+    LabelString           "Keywords (english): "
+    Align                 Center
+    Font
+      Size                Large
+    EndFont
+End
+
+Style AbstractEnglish
+    CopyStyle     Abstract
+    LatexName     abstracten
+    LabelString   "Abstract (english)" # For the menu?
+End
+
+Style Part
+    Align                 Left
+    AlignPossible         Left
+    TopSep                2
+    BottomSep             1.5
+    Font
+      Size                Larger
+    EndFont
+End
+
+Style Part*
+    Align                 Left
+    AlignPossible         Left
+    TopSep                2
+    BottomSep             1.5
+    Font
+      Size                Larger
+    EndFont
+End

@@ -1,0 +1,73 @@
+% Document template suitable for use as a LaTeX master-file 
+% for thesis works in University of Turku Department of Computing
+%
+% Technical usage guide: https://tech.utugit.fi/soft/thesis/doc/doc/overview/
+% 
+
+\documentclass[language=english,version=final,mainfont=none,sharelatex=true,minted=true]{utuftthesis}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\usepackage{float}
+\usepackage[caption=false]{subfig}
+\usepackage{enumitem}
+
+% Define the algorithm environment
+%\makeatletter
+\providecommand\textquotedblplain{%
+  \bgroup\addfontfeatures{Mapping=}\char34\egroup}
+\providecommand{\tabularnewline}{\\}
+\floatstyle{ruled}
+\newfloat{algorithm}{tbp}{loa}
+\providecommand{\algorithmname}{Algoritmi}
+\floatname{algorithm}{\protect\algorithmname}
+%\makeatother
+
+\addbibresource{Bibliografia.bib}
+
+\begin{document}
+
+\pubyear{2023}
+\pubmonth{6}
+\publab{Tietojenkäsittelytiede}
+\publaben{Computer Science}
+\pubtype{gradu}
+\title{Trusted Execution Environments in Protecting Machine Learning Models}
+\author{Maks Turtiainen}
+
+\newlist{questions}{enumerate}{2}
+\setlist[questions,1]{label=\textbf{RQ\arabic*.},ref=RQ\arabic*}
+\setlist[questions,2]{label=(\alph*),ref=\thequestionsi(\alph*)}
+
+\maketitle
+\input{abstract.tex}
+
+% mandatory
+\tableofcontents
+
+% if you want a list of figures
+\listoffigures
+
+% if you want a list of tables
+\listoftables
+
+% if you want a list of acronyms
+%\listofacronyms
+
+% change the name if the default doesn't sound right
+\renewcommand{\algorithmname}{\listingscaption}
+
+% The thesis starts here.
+
+\input{chapters/intro.tex}
+\input{chapters/problem.tex}
+\input{chapters/prev-res.tex}
+\input{chapters/ml.tex}
+\input{chapters/tee.tex}
+\input{chapters/solution.tex}
+\input{chapters/conclusion.tex}
+
+% The thesis main content ends here.
+
+\printbibliography
+
+\end{document}
